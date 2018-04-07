@@ -1,0 +1,42 @@
+{
+  "name": "swlib/swpdo",
+  "type": "library",
+  "keywords": [
+    "php",
+    "swoole",
+    "pdo",
+    "mysql"
+  ],
+  "description": "Swoole Coroutine SQL component like PDO",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "twosee",
+      "email": "twose@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0"
+  },
+  "autoload": {
+    "classmap": [
+      "src/SwPDO.php"
+    ],
+    "psr-4": {
+      "Swlib\\SwPDO\\": "src"
+    }
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  },
+  "require-dev": {
+    "eaglewu/swoole-ide-helper": "dev-master",
+    "phpunit/phpunit": "^5.7"
+  },
+  "scripts": {
+    "test": "./vendor/bin/phpunit -c phpunit.xml"
+  }
+}
