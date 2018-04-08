@@ -10,6 +10,8 @@
 
 Traditional PDO to Swoole Coroutine migration plan without cost.
 
+[中文文档](README-zh.md)
+
 <br>
 
 ## Coroutine
@@ -64,17 +66,70 @@ var_dump($pdo_number === $swpdo_number);
 //PDO
 $pdo = new \PDO(...$options);
 $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //strong type
-$statement = $pdo->prepare('select * from `user`');
+$statement = $pdo->prepare($sql);
 $statement->execute();
 $pdo_fetch = $statement->fetch(\PDO::FETCH_ASSOC);
+$statement->execute();
+$pdo_fetch_all = $statement->fetchAll();
+$statement->execute();
+$pdo_fetch_all_column = $statement->fetchAll(\PDO::FETCH_COLUMN, 1);
+$statement->execute();
+$pdo_fetch_column = $statement->fetchColumn();
+$statement->execute();
 
-//PDO
+//SwPDO
 $swpdo = SwPDO::construct(...$options);
-$statement = $swpdo->prepare('select * from `user`');
+$statement = $swpdo->prepare($sql);
 $statement->execute();
 $swpdo_fetch = $statement->fetch(\PDO::FETCH_ASSOC);
+$statement->execute();
+$swpdo_fetch_all = $statement->fetchAll();
+$statement->execute();
+$swpdo_fetch_all_column = $statement->fetchAll(\PDO::FETCH_COLUMN, 1);
+$statement->execute();
+$swpdo_fetch_column = $statement->fetchColumn();
+$statement->execute();
 
-var_dump($pdo_fetch === $swpdo_fetch);
-//output: true
+var_dump($pdo_fetch === $swpdo_fetch); //true
+var_dump($pdo_fetch_all === $swpdo_fetch_all); //true
+var_dump($pdo_fetch_all_column === $swpdo_fetch_all_column); //true
+var_dump($pdo_fetch_column === $swpdo_fetch_column); //true
+```
+
+### bind
+
+```php
+//PDO
+$pdo = new \PDO(...$options);
+$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //strong type
+$statement = $pdo->prepare($sql);
+$statement->execute(['id' => 1]);
+$pdo_bind_exec = $statement->fetch(\PDO::FETCH_ASSOC);
+
+$statement->bindValue(':id', 1);
+$statement->execute();
+$pdo_bind_val = $statement->fetch(\PDO::FETCH_ASSOC);
+
+$statement->bindParam(':id', $id);
+$statement->execute();
+$pdo_bind_param = $statement->fetch(\PDO::FETCH_ASSOC);
+
+//SwPDO
+$swpdo = SwPDO::construct(...$options);
+$statement = $swpdo->prepare($sql);
+$statement->execute(['id' => 1]);
+$swpdo_bind_exec = $statement->fetch(\PDO::FETCH_ASSOC);
+
+$statement->bindValue(':id', 1);
+$statement->execute();
+$swpdo_bind_val = $statement->fetch(\PDO::FETCH_ASSOC);
+
+$statement->bindParam(':id', $id);
+$statement->execute();
+$swpdo_bind_param = $statement->fetch(\PDO::FETCH_ASSOC);
+
+var_dump($pdo_bind_exec === $swpdo_bind_exec); //true
+var_dump($pdo_bind_val === $swpdo_bind_val); //true
+var_dump($pdo_bind_param === $swpdo_bind_param); //true
 ```
 

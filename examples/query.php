@@ -32,8 +32,8 @@ go(function () {
     $swpdo_object = $swpdo->query($sql)->fetch(\PDO::FETCH_OBJ);
     $swpdo_number = $swpdo->query($sql)->fetch(\PDO::FETCH_NUM);
 
-    var_dump($pdo_both === $swpdo_both);
-    var_dump($pdo_assoc === $swpdo_assoc);
-    var_dump($pdo_object == $swpdo_object);
-    var_dump($pdo_number === $swpdo_number);
+    var_dump($pdo_both === $swpdo_both); //true
+    var_dump($pdo_assoc === $swpdo_assoc); //true
+    var_dump($pdo_object == $swpdo_object); //true
+    var_dump($pdo_number === $swpdo_number); //true
 });

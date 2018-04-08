@@ -28,9 +28,14 @@ class Mysql
     public static function construct(array $options)
     {
         $mysql = new self();
-        if (isset($options['dbname'])) {
-            $options['database'] = $options['dbname'];
-            unset($options['dbname']);
+        static $keyMap = [
+            'dbname' => 'database'
+        ];
+        foreach ($keyMap as $pdoKey => $swpdoKey) {
+            if (isset($options[$pdoKey])) {
+                $options[$swpdoKey] = $options[$pdoKey];
+                unset($options[$pdoKey]);
+            }
         }
         $options = $options + self::$default_options;
         $mysql->client = new \Swoole\Coroutine\Mysql();
@@ -89,10 +94,30 @@ class Mysql
         return new MysqlStatement($this, $statement, ['timeout' => $timeout]);
     }
 
+    private function rewriteToPosition(string $statement)
+    {
+
+    }
+
     public function prepare(string $statement, array $driver_options = [])
     {
+        //rewriting :name to ? style.
+        if (strpos($statement, ':') !== false) {
+            $i = 0;
+            $bindKeyMap = [];
+            $statement = preg_replace_callback(
+                '/:(\w+)\b/',
+                function ($matches) use (&$i, &$bindKeyMap) {
+                    $bindKeyMap[$matches[1]] = $i++;
+
+                    return '?';
+                },
+                $statement
+            );
+        }
         $stmt_obj = $this->client->prepare($statement);
         if ($stmt_obj) {
+            $stmt_obj->bindKeyMap = $bindKeyMap ?? [];
             return new MysqlStatement($this, $stmt_obj, $driver_options);
         } else {
             return false;
