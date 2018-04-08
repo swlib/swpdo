@@ -24,7 +24,7 @@ It needs to be used in event callback functions such as `onRequet`, `onReceive`,
 
 > Because PDO uses multiple engines, it is difficult at the PHP level to return different instances with class - implemented constructors.
 
-Except that the constructor is different, all methods use in the same way.
+**Except that the constructor is different, all methods use in the same way.**
 
 #### query
 
@@ -55,4 +55,26 @@ var_dump($pdo_both === $swpdo_both);
 var_dump($pdo_assoc === $swpdo_assoc);
 var_dump($pdo_object == $swpdo_object);
 var_dump($pdo_number === $swpdo_number);
+//output: true true true true
 ```
+
+#### prepare
+
+```php
+//PDO
+$pdo = new \PDO(...$options);
+$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //strong type
+$statement = $pdo->prepare('select * from `user`');
+$statement->execute();
+$pdo_fetch = $statement->fetch(\PDO::FETCH_ASSOC);
+
+//PDO
+$swpdo = SwPDO::construct(...$options);
+$statement = $swpdo->prepare('select * from `user`');
+$statement->execute();
+$swpdo_fetch = $statement->fetch(\PDO::FETCH_ASSOC);
+
+var_dump($pdo_fetch === $swpdo_fetch);
+//output: true
+```
+

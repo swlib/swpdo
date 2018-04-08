@@ -47,7 +47,11 @@ class MysqlStatement
 
     public function execute(array $input_parameters = [], ?float $timeout = null)
     {
-        return $this->statement->execute($input_parameters, $timeout ?? $this->timeout);
+        $r = $this->statement->execute($input_parameters, $timeout ?? $this->timeout);
+        $failed = $r === false;
+        $this->result_set = $failed ? [] : $r;
+
+        return !$failed;
     }
 
     private function __executeWhenStringQueryEmpty()
