@@ -14,6 +14,14 @@ Traditional PDO to Swoole Coroutine migration plan without cost.
 
 <br>
 
+## Install
+
+The best way to install:  [Composer](http://getcomposer.org/) :
+
+```shell
+composer require swlib/swpdo
+```
+
 ## Coroutine
 
 The bottom layer of Swoole implements coroutine scheduling, **and the business layer does not need to be aware**. Developers can use synchronization code writing methods to achieve the effect and ultra-high performance of asynchronous IO without perception, avoiding the discrete code logic and trapping caused by traditional asynchronous callbacks. Too many callback layers causes the code too difficult to maintain.
