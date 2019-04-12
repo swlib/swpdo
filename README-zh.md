@@ -10,8 +10,6 @@
 
 0成本迁移PDO到Swoole协程客户端.
 
-<br>
-
 ## 安装
 
 最好的安装方法是通过 [Composer](http://getcomposer.org/) 包管理器 :
@@ -19,6 +17,8 @@
 ```shell
 composer require swlib/saber
 ```
+
+<br>
 
 ## 协程调度
 

@@ -12,8 +12,6 @@ Traditional PDO to Swoole Coroutine migration plan without cost.
 
 [中文文档](README-zh.md)
 
-<br>
-
 ## Install
 
 The best way to install:  [Composer](http://getcomposer.org/) :
@@ -21,6 +19,8 @@ The best way to install:  [Composer](http://getcomposer.org/) :
 ```shell
 composer require swlib/swpdo
 ```
+
+<br>
 
 ## Coroutine
 
