@@ -7,6 +7,10 @@
 
 namespace Swlib\SwPDO;
 
+use BadMethodCallException;
+use InvalidArgumentException;
+use PDO;
+
 class Mysql
 {
     private static $default_options = [
@@ -127,30 +131,30 @@ class Mysql
     public function getAttribute(int $attribute)
     {
         switch ($attribute) {
-            case \PDO::ATTR_AUTOCOMMIT:
+            case PDO::ATTR_AUTOCOMMIT:
                 return true;
-            case \PDO::ATTR_CASE:
-            case \PDO::ATTR_CLIENT_VERSION:
-            case \PDO::ATTR_CONNECTION_STATUS:
+            case PDO::ATTR_CASE:
+            case PDO::ATTR_CLIENT_VERSION:
+            case PDO::ATTR_CONNECTION_STATUS:
                 return $this->client->connected;
-            case \PDO::ATTR_DRIVER_NAME:
-            case \PDO::ATTR_ERRMODE:
+            case PDO::ATTR_DRIVER_NAME:
+            case PDO::ATTR_ERRMODE:
                 return 'Swoole Style';
-            case \PDO::ATTR_ORACLE_NULLS:
-            case \PDO::ATTR_PERSISTENT:
-            case \PDO::ATTR_PREFETCH:
-            case \PDO::ATTR_SERVER_INFO:
+            case PDO::ATTR_ORACLE_NULLS:
+            case PDO::ATTR_PERSISTENT:
+            case PDO::ATTR_PREFETCH:
+            case PDO::ATTR_SERVER_INFO:
                 return $this->serverInfo['timeout'] ?? self::$default_options['timeout'];
-            case \PDO::ATTR_SERVER_VERSION:
-            case \PDO::ATTR_TIMEOUT:
+            case PDO::ATTR_SERVER_VERSION:
+            case PDO::ATTR_TIMEOUT:
             default:
-                throw new \InvalidArgumentException('Not implemented yet!');
+                throw new InvalidArgumentException('Not implemented yet!');
         }
     }
 
     public function quote()
     {
-        throw new \BadMethodCallException(<<<TXT
+        throw new BadMethodCallException(<<<TXT
 If you are using this function to build SQL statements, 
 you are strongly recommended to use PDO::prepare() to prepare SQL statements 
 with bound parameters instead of using PDO::quote() to interpolate user input into an SQL statement.

@@ -7,12 +7,15 @@
 
 namespace Swlib\SwPDO;
 
+use PDO;
+use Swoole\Coroutine\Mysql\Statement;
+
 class MysqlStatement
 {
 
     private $parent;
     /**
-     * @var \Swoole\Coroutine\Mysql\Statement | string
+     * @var Statement | string
      */
     public $statement;
     public $timeout;
@@ -20,7 +23,7 @@ class MysqlStatement
     public $bindMap = [];
 
     public $cursor = -1;
-    public $cursor_orientation = \PDO::FETCH_ORI_NEXT;
+    public $cursor_orientation = PDO::FETCH_ORI_NEXT;
     public $result_set = [];
 
     public function __construct(Mysql $parent, $statement, array $driver_options = [])
@@ -128,7 +131,7 @@ class MysqlStatement
 
     private static function transStyle(
         $raw_data,
-        int $fetch_style = \PDO::FETCH_BOTH,
+        int $fetch_style = PDO::FETCH_BOTH,
         $fetch_argument = null,
         array $ctor_args = []
     ) {
@@ -140,26 +143,26 @@ class MysqlStatement
         }
         $result_set = [];
         switch ($fetch_style) {
-            case \PDO::FETCH_BOTH:
+            case PDO::FETCH_BOTH:
                 $result_set = self::transBoth($raw_data);
                 break;
-            case \PDO::FETCH_COLUMN:
+            case PDO::FETCH_COLUMN:
                 $result_set = array_column(
                     is_numeric($fetch_argument) ? self::transBoth($raw_data) : $raw_data,
                     $fetch_argument
                 );
                 break;
-            case \PDO::FETCH_OBJ:
+            case PDO::FETCH_OBJ:
                 foreach ($raw_data as $row) {
                     $result_set[] = (object)$row;
                 }
                 break;
-            case \PDO::FETCH_NUM:
+            case PDO::FETCH_NUM:
                 foreach ($raw_data as $row) {
                     $result_set[] = array_values($row);
                 }
                 break;
-            case \PDO::FETCH_ASSOC:
+            case PDO::FETCH_ASSOC:
             default:
                 return $raw_data;
         }
@@ -168,20 +171,20 @@ class MysqlStatement
     }
 
     public function fetch(
-        int $fetch_style = \PDO::FETCH_BOTH,
-        int $cursor_orientation = \PDO::FETCH_ORI_NEXT,
+        int $fetch_style = PDO::FETCH_BOTH,
+        int $cursor_orientation = PDO::FETCH_ORI_NEXT,
         int $cursor_offset = 0,
         $fetch_argument = null
     ) {
         $this->__executeWhenStringQueryEmpty();
         switch ($cursor_orientation) {
-            case \PDO::FETCH_ORI_ABS:
+            case PDO::FETCH_ORI_ABS:
                 $this->cursor = $cursor_offset;
                 break;
-            case \PDO::FETCH_ORI_REL:
+            case PDO::FETCH_ORI_REL:
                 $this->cursor += $cursor_offset;
                 break;
-            case \PDO::FETCH_ORI_NEXT:
+            case PDO::FETCH_ORI_NEXT:
             default:
                 $this->cursor++;
         }
@@ -212,10 +215,10 @@ class MysqlStatement
     public function fetchColumn(int $column_number = 0)
     {
         $this->__executeWhenStringQueryEmpty();
-        return $this->fetch(\PDO::FETCH_COLUMN, \PDO::FETCH_ORI_NEXT, 0, $column_number);
+        return $this->fetch(PDO::FETCH_COLUMN, PDO::FETCH_ORI_NEXT, 0, $column_number);
     }
 
-    public function fetchAll(int $fetch_style = \PDO::FETCH_BOTH, $fetch_argument = null, array $ctor_args = [])
+    public function fetchAll(int $fetch_style = PDO::FETCH_BOTH, $fetch_argument = null, array $ctor_args = [])
     {
         $this->__executeWhenStringQueryEmpty();
         $result_set = self::transStyle($this->result_set, $fetch_style, $fetch_argument, $ctor_args);
